@@ -21,7 +21,7 @@ MainFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 MainFrame.Position = UDim2.new(0.3, 0, 0.25, 0)
 MainFrame.Size = UDim2.new(0, 400, 0, 400)
 MainFrame.Active = true
-MainFrame.Draggable = false
+MainFrame.Draggable = true  -- Now draggable
 MainFrame.BackgroundTransparency = 0.25
 MainFrame.BorderSizePixel = 0
 MainFrame.ClipsDescendants = true
@@ -192,23 +192,4 @@ local dragging = false
 local dragInput, mousePos, framePos
 
 MainFrame.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        dragging = true
-        dragInput = input
-        mousePos = input.Position
-        framePos = MainFrame.Position
-    end
-end)
-
-MainFrame.InputChanged:Connect(function(input)
-    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
-        local delta = input.Position - mousePos
-        MainFrame.Position = UDim2.new(framePos.X.Scale, framePos.X.Offset + delta.X, framePos.Y.Scale, framePos.Y.Offset + delta.Y)
-    end
-end)
-
-MainFrame.InputEnded:Connect(function(input)
-    if input == dragInput then
-        dragging = false
-    end
-end)
+    if input.UserInputType == Enum.User
