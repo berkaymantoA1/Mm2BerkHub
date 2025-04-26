@@ -1,196 +1,214 @@
--- BerkHub V1 GUI Script
+-- MM2 HUB Script with BerkHub Rainbow Text
 
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-local Workspace = game:GetService("Workspace")
-local RunService = game:GetService("RunService")
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local Title = Instance.new("TextLabel")
+local ESPButton = Instance.new("TextButton")
+local AutoFarmButton = Instance.new("TextButton")
+local GodmodeButton = Instance.new("TextButton")
+local RoleInfo = Instance.new("TextLabel")
+local ToggleRoleButton = Instance.new("TextButton")
+local BerkHubText = Instance.new("TextLabel")
 
--- GUI Oluştur
-local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
-ScreenGui.Name = "BerkHubMM2"
+-- Parent Setup
+ScreenGui.Parent = game.CoreGui
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- Arka Plan (Frame) - Gradient ve Saydam
-local Frame = Instance.new("Frame", ScreenGui)
-Frame.Size = UDim2.new(0, 400, 0, 300)
-Frame.Position = UDim2.new(0.5, -200, 0.5, -150)
-Frame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-Frame.BorderSizePixel = 0
-Frame.BackgroundTransparency = 0.1
-Frame.Active = true
-Frame.Draggable = true
+-- Main Frame
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+MainFrame.Position = UDim2.new(0.3, 0, 0.25, 0)
+MainFrame.Size = UDim2.new(0, 400, 0, 400)
+MainFrame.Active = true
+MainFrame.Draggable = false
+MainFrame.BackgroundTransparency = 0.25
+MainFrame.BorderSizePixel = 0
+MainFrame.ClipsDescendants = true
+MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+MainFrame.LayoutOrder = 1
+MainFrame.BorderRadius = UDim.new(0, 20) -- Rounded corners
 
--- Gradient Arka Plan
-local uiGradient = Instance.new("UIGradient", Frame)
-uiGradient.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(80, 80, 255)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 80, 80))
-}
-uiGradient.Rotation = 45
+-- BerkHub Rainbow Text
+BerkHubText.Name = "BerkHubText"
+BerkHubText.Parent = MainFrame
+BerkHubText.BackgroundTransparency = 1
+BerkHubText.Size = UDim2.new(1, 0, 0, 50)
+BerkHubText.Font = Enum.Font.GothamBold
+BerkHubText.TextSize = 28
+BerkHubText.TextColor3 = Color3.fromRGB(255, 255, 255)
+BerkHubText.TextStrokeTransparency = 0.6
+BerkHubText.Text = "BerkHub"
+BerkHubText.TextAlignment = Enum.TextAlignment.Center
+BerkHubText.Position = UDim2.new(0, 0, 0, 0)
 
--- Başlık
-local title = Instance.new("TextLabel", Frame)
-title.Size = UDim2.new(1, 0, 0, 50)
-title.BackgroundTransparency = 1
-title.Text = "BerkHub V1"
-title.Font = Enum.Font.GothamBold
-title.TextSize = 30
-title.TextColor3 = Color3.fromRGB(255, 255, 255)
-title.TextStrokeTransparency = 0.7
-
--- Rainbow başlık efekti
-spawn(function()
-    while wait(0.1) do
-        title.TextColor3 = Color3.fromHSV(tick() % 5 / 5, 1, 1)
-    end
-end)
-
--- Roller Label (Üstte)
-local InfoLabel = Instance.new("TextLabel", ScreenGui)
-InfoLabel.Size = UDim2.new(0, 400, 0, 40)
-InfoLabel.Position = UDim2.new(0.5, -200, 0, 60)
-InfoLabel.BackgroundTransparency = 0.3
-InfoLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-InfoLabel.TextColor3 = Color3.new(1, 1, 1)
-InfoLabel.Font = Enum.Font.SourceSansBold
-InfoLabel.TextSize = 20
-InfoLabel.Text = "BerkHub V1 Başlatıldı"
-InfoLabel.Visible = false
-
--- Murderer ve Sheriff İsimlerini Gösteren TextLabel
-local murdererSheriffLabel = Instance.new("TextLabel", ScreenGui)
-murdererSheriffLabel.Size = UDim2.new(0, 400, 0, 40)
-murdererSheriffLabel.Position = UDim2.new(0.5, -200, 0, 110)
-murdererSheriffLabel.BackgroundTransparency = 0.3
-murdererSheriffLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-murdererSheriffLabel.TextColor3 = Color3.new(1, 1, 1)
-murdererSheriffLabel.Font = Enum.Font.SourceSansBold
-murdererSheriffLabel.TextSize = 20
-murdererSheriffLabel.Text = "Murderer : - | Sheriff : -"
-murdererSheriffLabel.Visible = false -- Başlangıçta gizli
-
--- Buton Oluşturma Fonksiyonu
-local function createButton(text, pos, callback)
-    local button = Instance.new("TextButton", Frame)
-    button.Size = UDim2.new(0, 360, 0, 50)
-    button.Position = UDim2.new(0, 20, 0, pos)
-    button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    button.TextColor3 = Color3.new(1, 1, 1)
-    button.Font = Enum.Font.Gotham
-    button.TextSize = 20
-    button.Text = text
-    button.TextStrokeTransparency = 0.5
-    button.BorderRadius = UDim.new(0, 10)
-    button.MouseButton1Click:Connect(callback)
-
-    -- Hover Efekti
-    button.MouseEnter:Connect(function()
-        button.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-    end)
-    button.MouseLeave:Connect(function()
-        button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    end)
-
-    return button
-end
-
--- Coin Farm
-local farming = false
-createButton("Coin Farm", 60, function()
-    farming = not farming
-    InfoLabel.Text = farming and "Coin Farm Aktif" or "Coin Farm Kapalı"
-    InfoLabel.Visible = true
-    if farming then
-        task.spawn(function()
-            while farming do
-                for _,v in pairs(Workspace:GetChildren()) do
-                    if v.Name == "CoinContainer" then
-                        for _, coin in pairs(v:GetChildren()) do
-                            if coin:IsA("BasePart") then
-                                LocalPlayer.Character.HumanoidRootPart.CFrame = coin.CFrame
-                                wait(0.2)
-                            end
-                        end
-                    end
-                end
-                wait(0.5)
-            end
-        end)
-    end
-end)
-
--- ESP Fonksiyonu
-local function createESP(player, color)
-    if player.Character and not player.Character:FindFirstChild("BerkESP") then
-        local highlight = Instance.new("Highlight", player.Character)
-        highlight.Name = "BerkESP"
-        highlight.FillColor = color
-        highlight.OutlineColor = color
-        highlight.Adornee = player.Character
-        highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+-- Rainbow effect for the text
+local function changeColor()
+    while true do
+        for i = 0, 255, 5 do
+            BerkHubText.TextColor3 = Color3.fromHSV(i/255, 1, 1)
+            wait(0.05)
+        end
     end
 end
 
--- Murderer & Sheriff ESP
-createButton("Murderer & Sheriff ESP", 120, function()
-    for _, player in pairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer and player.Backpack then
-            for _, tool in pairs(player.Backpack:GetChildren()) do
-                if tool.Name == "Knife" then
-                    createESP(player, Color3.new(1, 0, 0)) -- Kırmızı = Murderer
-                elseif tool.Name == "Gun" then
-                    createESP(player, Color3.new(0, 0, 1)) -- Mavi = Sheriff
-                end
-            end
+-- Start the rainbow effect
+coroutine.wrap(changeColor)()
+
+-- Title
+Title.Name = "Title"
+Title.Parent = MainFrame
+Title.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+Title.Size = UDim2.new(1, 0, 0, 50)
+Title.Font = Enum.Font.GothamBold
+Title.Text = "MM2 HUB"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 28
+Title.TextStrokeTransparency = 0.6
+Title.BorderSizePixel = 0
+Title.BorderRadius = UDim.new(0, 15) -- Rounded corners
+
+-- ESP Button
+ESPButton.Name = "ESPButton"
+ESPButton.Parent = MainFrame
+ESPButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+ESPButton.Position = UDim2.new(0.1, 0, 0.2, 0)
+ESPButton.Size = UDim2.new(0.8, 0, 0, 40)
+ESPButton.Font = Enum.Font.GothamBold
+ESPButton.Text = "Enable ESP"
+ESPButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ESPButton.TextSize = 20
+ESPButton.BorderSizePixel = 0
+ESPButton.BorderRadius = UDim.new(0, 12) -- Rounded corners
+ESPButton.MouseEnter:Connect(function()
+    ESPButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+end)
+ESPButton.MouseLeave:Connect(function()
+    ESPButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+end)
+
+-- AutoFarm Button
+AutoFarmButton.Name = "AutoFarmButton"
+AutoFarmButton.Parent = MainFrame
+AutoFarmButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+AutoFarmButton.Position = UDim2.new(0.1, 0, 0.35, 0)
+AutoFarmButton.Size = UDim2.new(0.8, 0, 0, 40)
+AutoFarmButton.Font = Enum.Font.GothamBold
+AutoFarmButton.Text = "Enable AutoFarm"
+AutoFarmButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+AutoFarmButton.TextSize = 20
+AutoFarmButton.BorderSizePixel = 0
+AutoFarmButton.BorderRadius = UDim.new(0, 12) -- Rounded corners
+AutoFarmButton.MouseEnter:Connect(function()
+    AutoFarmButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+end)
+AutoFarmButton.MouseLeave:Connect(function()
+    AutoFarmButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+end)
+
+-- Godmode Button
+GodmodeButton.Name = "GodmodeButton"
+GodmodeButton.Parent = MainFrame
+GodmodeButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+GodmodeButton.Position = UDim2.new(0.1, 0, 0.5, 0)
+GodmodeButton.Size = UDim2.new(0.8, 0, 0, 40)
+GodmodeButton.Font = Enum.Font.GothamBold
+GodmodeButton.Text = "Enable Godmode"
+GodmodeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+GodmodeButton.TextSize = 20
+GodmodeButton.BorderSizePixel = 0
+GodmodeButton.BorderRadius = UDim.new(0, 12) -- Rounded corners
+GodmodeButton.MouseEnter:Connect(function()
+    GodmodeButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+end)
+GodmodeButton.MouseLeave:Connect(function()
+    GodmodeButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+end)
+
+-- Role Info TextLabel
+RoleInfo.Name = "RoleInfo"
+RoleInfo.Parent = MainFrame
+RoleInfo.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+RoleInfo.Position = UDim2.new(0.1, 0, 0.7, 0)
+RoleInfo.Size = UDim2.new(0.8, 0, 0, 60)
+RoleInfo.Font = Enum.Font.Gotham
+RoleInfo.Text = "Murderer: Unknown\nSheriff: Unknown"
+RoleInfo.TextColor3 = Color3.fromRGB(255, 255, 255)
+RoleInfo.TextSize = 18
+RoleInfo.TextWrapped = true
+RoleInfo.BorderSizePixel = 0
+RoleInfo.Visible = false
+
+-- Toggle Role Info Button
+ToggleRoleButton.Name = "ToggleRoleButton"
+ToggleRoleButton.Parent = MainFrame
+ToggleRoleButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+ToggleRoleButton.Position = UDim2.new(0.1, 0, 0.65, 0)
+ToggleRoleButton.Size = UDim2.new(0.8, 0, 0, 30)
+ToggleRoleButton.Font = Enum.Font.GothamBold
+ToggleRoleButton.Text = "Show Role Info"
+ToggleRoleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleRoleButton.TextSize = 16
+ToggleRoleButton.BorderSizePixel = 0
+ToggleRoleButton.BorderRadius = UDim.new(0, 12) -- Rounded corners
+ToggleRoleButton.MouseEnter:Connect(function()
+    ToggleRoleButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+end)
+ToggleRoleButton.MouseLeave:Connect(function()
+    ToggleRoleButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+end)
+
+-- Functions
+ToggleRoleButton.MouseButton1Click:Connect(function()
+    RoleInfo.Visible = not RoleInfo.Visible
+    if RoleInfo.Visible then
+        ToggleRoleButton.Text = "Hide Role Info"
+    else
+        ToggleRoleButton.Text = "Show Role Info"
+    end
+end)
+
+-- Murderer and Sheriff Detection (Example Code)
+local function UpdateRoles()
+    for i,v in pairs(game.Players:GetPlayers()) do
+        if v.Backpack:FindFirstChild("Knife") then
+            RoleInfo.Text = "Murderer: "..v.Name.."\nSheriff: Unknown"
+        elseif v.Backpack:FindFirstChild("Gun") then
+            local murdererName = RoleInfo.Text:match("Murderer: (.-)\n") or "Unknown"
+            RoleInfo.Text = "Murderer: "..murdererName.."\nSheriff: "..v.Name
         end
     end
-    InfoLabel.Text = "ESP Aktif Edildi"
-    InfoLabel.Visible = true
-end)
+end
 
--- Roller Göstermek için Buton
-createButton("Murderer & Sheriff Name", 180, function()
-    local murderer = "Bulunamadı"
-    local sheriff = "Bulunamadı"
-    
-    for _, player in pairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer and player.Backpack then
-            for _, tool in pairs(player.Backpack:GetChildren()) do
-                if tool.Name == "Knife" then
-                    murderer = player.Name
-                elseif tool.Name == "Gun" then
-                    sheriff = player.Name
-                end
-            end
-        end
+game.Players.PlayerAdded:Connect(UpdateRoles)
+game.Players.PlayerRemoving:Connect(UpdateRoles)
+while task.wait(2) do
+    UpdateRoles()
+end
+
+-- Smooth Drag Function
+local dragging = false
+local dragInput, mousePos, framePos
+
+MainFrame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragInput = input
+        mousePos = input.Position
+        framePos = MainFrame.Position
     end
-    
-    murdererSheriffLabel.Text = "Murderer : " .. murderer .. " | Sheriff : " .. sheriff
 end)
 
--- Buton ile Murderer & Sheriff Label Gösterme/Kapatma
-createButton("Toggle Murderer & Sheriff", 240, function()
-    murdererSheriffLabel.Visible = not murdererSheriffLabel.Visible
+MainFrame.InputChanged:Connect(function(input)
+    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+        local delta = input.Position - mousePos
+        MainFrame.Position = UDim2.new(framePos.X.Scale, framePos.X.Offset + delta.X, framePos.Y.Scale, framePos.Y.Offset + delta.Y)
+    end
 end)
 
--- Minimize/Kapatma Butonu
-local minimizeButton = Instance.new("TextButton", Frame)
-minimizeButton.Size = UDim2.new(0, 360, 0, 50)
-minimizeButton.Position = UDim2.new(0, 20, 0, 280)
-minimizeButton.BackgroundColor3 = Color3.fromRGB(100, 100, 255)
-minimizeButton.TextColor3 = Color3.new(1, 1, 1)
-minimizeButton.Font = Enum.Font.Gotham
-minimizeButton.TextSize = 20
-minimizeButton.Text = "Minimize"
-minimizeButton.TextStrokeTransparency = 0.5
-minimizeButton.BorderRadius = UDim.new(0, 10)
-minimizeButton.MouseButton1Click:Connect(function()
-    -- Animasyonla Frame'i yukarı kaydır ve başlık da kaybolsun
-    local tweenService = game:GetService("TweenService")
-    local goal = {Position = UDim2.new(0.5, -200, 0, -100)}
-    local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-    local tween = tweenService:Create(Frame, tweenInfo, goal)
-    tween:Play()
-
-    -- Başlık da kaybolacak
-    local goalTitle = {Position = UDim2.new(0.5, -200, 0, -50)}
-    local tweenTitle = tweenService:Create(title, tweenInfo
+MainFrame.InputEnded:Connect(function(input)
+    if input == dragInput then
+        dragging = false
+    end
+end)
