@@ -181,15 +181,4 @@ local function UpdateRoles()
     end
 end
 
-game.Players.PlayerAdded:Connect(UpdateRoles)
-game.Players.PlayerRemoving:Connect(UpdateRoles)
-while task.wait(2) do
-    UpdateRoles()
-end
-
--- Smooth Drag Function
-local dragging = false
-local dragInput, mousePos, framePos
-
-MainFrame.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.User
+game.Pl
